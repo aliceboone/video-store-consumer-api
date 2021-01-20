@@ -21,6 +21,15 @@ class VideosController < ApplicationController
       )
   end
 
+  def create
+    video =  Video.new(title:params[:title])
+    if video.save
+      render status: :created, json: {}
+    else
+      render status: :bad_request, json: {errors: video.errors.messages}
+    end
+  end
+
   private
 
   def require_video

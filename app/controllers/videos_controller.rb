@@ -22,16 +22,18 @@ class VideosController < ApplicationController
   end
 
   def create
-    video =  Video.new(video_params)
-      unless Video.find_by(external_id: params[:external_id])
-        unique = video.save
-      end
-        if unique
+    p params
+    video = Video.new(video_params)
+    if Video.find_by(external_id: params[:external_id])
+      render status: :bad_request, json: {errors: ['Video already exist'] }
+    else
+      if video.save
         render status: :created, json: {}
-        else
+      else
         render status: :bad_request, json: {errors: video.errors.messages}
-        end
+      end
     end
+  end
 
   private
 
